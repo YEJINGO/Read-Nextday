@@ -80,7 +80,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .exceptionHandling().authenticationEntryPoint(customEntryPoint)
+                .exceptionHandling()
+                .authenticationEntryPoint(customEntryPoint)
                 .and()
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();

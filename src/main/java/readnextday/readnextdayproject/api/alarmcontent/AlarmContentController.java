@@ -14,7 +14,7 @@ import readnextday.readnextdayproject.common.Response;
 import readnextday.readnextdayproject.config.auth.LoginMember;
 
 @RestController
-@RequestMapping("api/auth/alarm/content")
+@RequestMapping("/api/auth/alarm/content")
 @RequiredArgsConstructor
 public class AlarmContentController {
 

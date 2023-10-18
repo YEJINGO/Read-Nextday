@@ -23,10 +23,15 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String loginException = authException.getClass().getSimpleName();
+        String exception = (String)request.getAttribute("exception");
         if(loginException.equals(UsernameNotFoundException.class.getSimpleName())){
-            setResponse(response,"USER_NOT_FOUND", "아이디가 일치하지 않습니다.");
+            setResponse(response,"USER_NOT_FOUND", "존재하지 않는 사용자 입니다");
         }else if(loginException.equals(BadCredentialsException.class.getSimpleName())){
             setResponse(response,"INVALID_PASSWORD", "비밀번호가 일치하지 않습니다.");
+        }
+
+        if(exception == null) {
+            setResponse(response, "NON_LOGIN","토큰이 없습니다.");
         }
     }
 

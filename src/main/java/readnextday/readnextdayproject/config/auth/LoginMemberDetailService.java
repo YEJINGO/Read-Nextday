@@ -27,7 +27,7 @@ public class LoginMemberDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
-                new GlobalException(ErrorCode.USER_NOT_FOUND));
+                new GlobalException(ErrorCode.USER_NOT_FOUND, "아이디가 일치하지 않습니다"));
 
         return new LoginMember(member);
     }

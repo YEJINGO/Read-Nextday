@@ -8,6 +8,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,8 @@ public class Post extends BaseEntity {
 
     private String content;
 
-    private String extractTextFromPdf;
+    @Lob
+    private byte[] extractTextFromPdf;
 
     private boolean is_deleted = Boolean.FALSE;
 
@@ -42,8 +45,11 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostTag> postTag;
 
-    @Builder
+
+    @Builder(builderClassName = "urlBuilder", builderMethodName = "urlBuilder")
     public Post(String url, String title, String content, Member member) {
         this.url = url;
         this.title = title;
@@ -51,8 +57,8 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
-    @Builder(builderMethodName = "pdfBuilder")
-    public Post(String url, String title, String content, String extractTextFromPdf, Member member) {
+    @Builder(builderClassName = "pdfBuilder", builderMethodName = "pdfBuilder")
+    public Post(String url, String title, String content, byte[] extractTextFromPdf, Member member) {
         this.url = url;
         this.title = title;
         this.content = content;

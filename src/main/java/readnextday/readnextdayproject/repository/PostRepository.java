@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
     Optional<Post> findByIdAndMemberId(Long postId, Long id);
 
     List<Post> findByMemberId(Long loginMemberId);

@@ -1,7 +1,15 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.16'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	//querydsl 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'read-nextday'
@@ -47,8 +55,32 @@ dependencies {
 	implementation("com.slack.api:bolt-jetty:1.18.0")
 	//PDF
 	implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	//querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+
+}
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl" // 쿼리 dsl폴더를 bulid폴더->generated->querydsl에 넣는다.
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }

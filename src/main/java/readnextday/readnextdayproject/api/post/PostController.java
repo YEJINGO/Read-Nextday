@@ -1,8 +1,7 @@
 package readnextday.readnextdayproject.api.post;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +51,12 @@ public class PostController {
     @GetMapping("/{postId}")
     public Response<GetPostResponse> getPost(@AuthenticationPrincipal LoginMember loginMember, @PathVariable Long postId) {
         return postService.getPost(loginMember, postId);
+    }
+
+    // 4-2. 게시글 전체 조회
+    @GetMapping
+    public Response<TotalPostsResponse> getAllPost(Pageable pageable, @AuthenticationPrincipal LoginMember loginMember) {
+        return postService.getAllPost(pageable,loginMember);
     }
 
 

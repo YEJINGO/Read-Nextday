@@ -1,14 +1,12 @@
 package readnextday.readnextdayproject.api.post;
 
-import com.slack.api.Slack;
-import com.slack.api.methods.MethodsClient;
-import com.slack.api.methods.SlackApiException;
-import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import readnextday.readnextdayproject.api.post.dto.request.CreatePdfPostRequest;
@@ -16,6 +14,7 @@ import readnextday.readnextdayproject.api.post.dto.request.CreatePostRequest;
 import readnextday.readnextdayproject.api.post.dto.request.EditPostRequest;
 import readnextday.readnextdayproject.api.post.dto.response.*;
 import readnextday.readnextdayproject.common.Response;
+import readnextday.readnextdayproject.common.SlackAlarm;
 import readnextday.readnextdayproject.config.auth.LoginMember;
 import readnextday.readnextdayproject.entity.*;
 import readnextday.readnextdayproject.exception.ErrorCode;
@@ -40,6 +39,7 @@ public class PostService {
     private final TagRepository tagRepository;
     private final PostTagService postTagService;
     private final BookmarkRepository bookmarkRepository;
+    private final SlackAlarm slackAlarm;
 
     @Value("${slack.token}")
     String slackToken;
@@ -48,7 +48,7 @@ public class PostService {
     public Response<CreatePostResponse> createPost(LoginMember loginMember, CreatePostRequest request) {
 
 
-        Post post = Post.builder()
+        Post post = Post.urlBuilder()
                 .url(request.getUrl())
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -72,8 +72,7 @@ public class PostService {
                 .tagName(newTagNames) // tagName 리스트 설정
                 .build();
 
-        sendSlackMessage();
-
+        slackAlarm.sendPostAlarmSlackMessage(post);
 
         return Response.success("게시물 생성 성공", createPostResponse);
 
@@ -94,12 +93,13 @@ public class PostService {
             String extractedText = extractTextFromPdfFile(pdfInputStream);
 
             Post post = Post.pdfBuilder()
-                    .url("null")
+                    .url(null)
                     .title(request.getTitle())
                     .content(request.getContent())
-                    .extractTextFromPdf(extractedText)
+                    .extractTextFromPdf(extractedText.getBytes())
                     .member(loginMember.getMember())
                     .build();
+
 
             if (request.getCategoryId() != null) {
                 Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow(() ->
@@ -122,7 +122,7 @@ public class PostService {
                     .tagName(newTagNames)
                     .build();
 
-            sendSlackMessage();
+            slackAlarm.sendPostAlarmSlackMessage(post);
 
 
             return Response.success("게시물 생성 성공", createPdfPostResponse);
@@ -153,7 +153,8 @@ public class PostService {
         findPost.update(editUrl, editTitle, editContent);
 
         if (request.getTagNames() != null && !request.getTagNames().isEmpty()) { // 수정: null 체크 추가
-            postTagService.saveTag(findPost, request.getTagNames());
+
+            postTagService.updateTag(findPost, request.getTagNames());
         }
 
         List<String> newTagNames = (request.getTagNames() != null && !request.getTagNames().isEmpty()) ? request.getTagNames() : null;
@@ -164,6 +165,9 @@ public class PostService {
                 .content(editContent)
                 .tagName(newTagNames) // tagName 리스트 설정
                 .build();
+
+        slackAlarm.sendPostEditAlarmSlackMessage(findPost);
+
         return Response.success("게시물 수정 성공", editPostResponse);
     }
 
@@ -207,6 +211,8 @@ public class PostService {
         postRepository.deleteById(findPost.getId());
         log.info("findPost.getId()" + findPost.getId());
 
+        slackAlarm.sendPostDeleteAlarmSlackMessage(findPost);
+
         return Response.success("게시글 삭제 성공");
     }
 
@@ -248,18 +254,9 @@ public class PostService {
         return Response.success("모든 북마크 조회", bookmarkResponses);
     }
 
-    private void sendSlackMessage() {
-        MethodsClient methods = Slack.getInstance().methods(slackToken);
-
-        ChatPostMessageRequest slackRequest = ChatPostMessageRequest.builder()
-                .channel("#게시글알림")
-                .text("> 테스트-게시글생성")
-                .build();
-
-        try {
-            methods.chatPostMessage(slackRequest);
-        } catch (IOException | SlackApiException e) {
-            throw new RuntimeException(e);
-        }
+    public Response<TotalPostsResponse> getAllPost(Pageable pageable, LoginMember loginMember) {
+        Page<AllPostsResponse> result = postRepository.findByAllPosts(pageable, loginMember);
+        return Response.success("게시물 전체조회 성공", new TotalPostsResponse(result));
     }
+
 }

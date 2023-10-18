@@ -15,6 +15,8 @@ public enum ErrorCode {
     ALARM_CONTENT_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 알람 글귀입니다." ),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자 입니다"),
     ;
+
     private HttpStatus status;
+
     private String message;
 }
