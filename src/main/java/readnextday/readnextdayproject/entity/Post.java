@@ -32,8 +32,8 @@ public class Post extends BaseEntity {
 
     private String content;
 
-    @Lob
-    private byte[] extractTextFromPdf;
+    @Column(columnDefinition = "TEXT")
+    private String extractTextFromPdf;
 
     private boolean is_deleted = Boolean.FALSE;
 
@@ -58,7 +58,7 @@ public class Post extends BaseEntity {
     }
 
     @Builder(builderClassName = "pdfBuilder", builderMethodName = "pdfBuilder")
-    public Post(String url, String title, String content, byte[] extractTextFromPdf, Member member) {
+    public Post(String url, String title, String content, String extractTextFromPdf, Member member) {
         this.url = url;
         this.title = title;
         this.content = content;

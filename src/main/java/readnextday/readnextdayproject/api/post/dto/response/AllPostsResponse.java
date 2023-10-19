@@ -13,10 +13,10 @@ public class AllPostsResponse {
     private String url;
     private String title;
     private String content;
-    private byte[] extractTextFromPdf;
+    private String extractTextFromPdf;
     private List<String> tags;
 
-    public AllPostsResponse(Long postId, Long memberId, String url, String title, String content, byte[] extractTextFromPdf) {
+    public AllPostsResponse(Long postId, Long memberId, String url, String title, String content, String extractTextFromPdf) {
         this.postId = postId;
         this.memberId = memberId;
         this.url = url;

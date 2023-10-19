@@ -2,6 +2,8 @@ package readnextday.readnextdayproject.api.post;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,6 +61,11 @@ public class PostController {
         return postService.getAllPost(pageable,loginMember);
     }
 
+    // 게시글 검색하기 (검색 : title, content 에서 검색하기)
+    @GetMapping("/search")
+    public Response<List<SearchPostResponse>>  searchPost(@RequestParam String keyword, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return postService.searchPost(keyword,pageable);
+    }
 
     // 5. 북마크
     @GetMapping("/{postId}/bookmark")
@@ -66,6 +73,7 @@ public class PostController {
         return postService.postBookmark(postId, loginMember);
     }
 
+    // 5-1 북마크 가져오기
     @GetMapping("/bookmark")
     public Response<List<BookmarkResponse>> getAllBookmarkPost(@AuthenticationPrincipal LoginMember loginMember) {
         return postService.getAllBookmarkPost(loginMember);

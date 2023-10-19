@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,7 +97,7 @@ public class PostService {
                     .url(null)
                     .title(request.getTitle())
                     .content(request.getContent())
-                    .extractTextFromPdf(extractedText.getBytes())
+                    .extractTextFromPdf(extractedText)
                     .member(loginMember.getMember())
                     .build();
 
@@ -216,9 +217,52 @@ public class PostService {
         return Response.success("게시글 삭제 성공");
     }
 
+    //게시글 검색하기 (검색 : title, content 에서 검색)
+
+    public Response<List<SearchPostResponse>> searchPost(String keyword, Pageable pageable) {
+        List<Post> searchPost = postRepository.findByTitleContainingOrContentContainingOrExtractTextFromPdfContaining(keyword, keyword, keyword, pageable);
+        List<SearchPostResponse> responseList = new ArrayList<>();
+
+        List<Long> searchPostIds = searchPost.stream()
+                .map(Post::getId)
+                .collect(Collectors.toList());
+
+        // postTagRepository.findByPostIdIn(searchPostIds)로 변경
+        // in을 사용하여 여러 ID를 받을 수 있음
+        List<PostTag> postTags = postTagRepository.findByPostIdIn(searchPostIds);
+
+        // 태그 ID를 추출한 리스트
+        List<Long> tagIds = postTags.stream()
+                .map(PostTag::getTagId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Tag 엔티티에서 이름을 가져와서 리스트로 변환
+        List<String> tagNames = tagIds.stream()
+                .map(tagId -> tagRepository.findById(tagId).map(Tag::getName).orElse(null))
+                .filter(tagName -> tagName != null)
+                .collect(Collectors.toList());
+
+        for (Post post : searchPost) {
+            String content = post.getContent() != null ? post.getContent() : post.getExtractTextFromPdf();
+
+            SearchPostResponse.SearchPostResponseBuilder responseBuilder = SearchPostResponse.builder()
+                    .url(post.getUrl())
+                    .title(post.getTitle())
+                    .content(content)
+                    .tagName(tagNames);
+
+            if (post.getExtractTextFromPdf() != null) {
+                responseBuilder.extractTextFromPdf(post.getExtractTextFromPdf());
+            }
+
+            responseList.add(responseBuilder.build());
+        }
+        return Response.success("게시글 검색 성공", responseList);
+    }
     public Response<Void> postBookmark(Long postId, LoginMember loginMember) {
 
-        Post findPost = postRepository.findByIdAndMemberId(postId, loginMember.getMember().getId())
+        Post findPost = postRepository.findById(postId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.POST_NOT_FOUND));
 
         Bookmark findBookmarkPost = bookmarkRepository.findByPostId(findPost.getId());
@@ -258,5 +302,4 @@ public class PostService {
         Page<AllPostsResponse> result = postRepository.findByAllPosts(pageable, loginMember);
         return Response.success("게시물 전체조회 성공", new TotalPostsResponse(result));
     }
-
 }
