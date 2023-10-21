@@ -8,9 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.sql.Blob;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
