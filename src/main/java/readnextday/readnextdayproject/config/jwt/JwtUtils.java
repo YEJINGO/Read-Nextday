@@ -93,6 +93,24 @@ public class JwtUtils {
         return false;
     }
 
+    public boolean stompValidationJwt(String token) throws IOException {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token); //토큰에 대한 검증 로직
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.error("토큰 만료 {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("토큰 유효성 검사 실패 {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("지원하지 않는 토큰 {}", e.getMessage());
+        } catch (SignatureException e) {
+            log.error("토큰 변조 {}", e.getMessage());
+        }
+
+        return false;
+    }
+
+
     public LoginMember getMember(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)

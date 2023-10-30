@@ -75,23 +75,23 @@ public class MemberService {
         return Response.success("로그인 성공!", result);
     }
 
-    @Transactional
-    public Response<LoginMemberResponse> reissue(RefreshTokenRequest request) {
-        String refreshToken = request.getRefreshToken();
-        RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() ->
-                new GlobalException(ErrorCode.EXPIRED_REFRESH_TOKEN, "RefreshToken Expired")
-        );
-
-        LoginMember loginMember = token.getLoginMember();
-        String newToken = jwtUtils.generateAccessToken(loginMember);
-
-        LoginMemberResponse result = LoginMemberResponse.builder()
-                .loginMember(loginMember)
-                .accessToken(newToken)
-                .refreshToken(refreshToken)
-                .build();
-
-        return Response.success("토큰 재발급 성공!", result);
-    }
+//    @Transactional
+//    public Response<LoginMemberResponse> reissue(RefreshTokenRequest request) {
+//        String refreshToken = request.getRefreshToken();
+//        RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() ->
+//                new GlobalException(ErrorCode.EXPIRED_REFRESH_TOKEN, "RefreshToken Expired")
+//        );
+//
+//        LoginMember loginMember = token.getLoginMember();
+//        String newToken = jwtUtils.generateAccessToken(loginMember);
+//
+//        LoginMemberResponse result = LoginMemberResponse.builder()
+//                .loginMember(loginMember)
+//                .accessToken(newToken)
+//                .refreshToken(refreshToken)
+//                .build();
+//
+//        return Response.success("토큰 재발급 성공!", result);
+//    }
 
 }
