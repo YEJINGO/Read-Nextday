@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Message {
+public class ChatMessageDto {
 
     private String chatRoomId;
     private MessageType type;
@@ -16,7 +16,7 @@ public class Message {
     private String message;
 
     @Builder
-    public Message(String chatRoomId, MessageType type, String sender, String message) {
+    public ChatMessageDto(String chatRoomId, MessageType type, String sender, String message) {
         this.chatRoomId = chatRoomId;
         this.type = type;
         this.sender = sender;

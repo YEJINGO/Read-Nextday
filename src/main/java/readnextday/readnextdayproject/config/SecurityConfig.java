@@ -75,7 +75,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(corsFilter())
                 .authorizeHttpRequests(request -> request
-                        .antMatchers("/api/member/**")
+                        .antMatchers("/api/member/**","/api/chat/**","/ws-stomp/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

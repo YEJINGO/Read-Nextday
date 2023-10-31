@@ -19,8 +19,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * 6. configureClientInboundChannel : 사용자가 웹 소켓 연결에 연결 될 때와 끊길 때 추가 기능(인증, 세션 관리 등)을 위해 인터셉터를 걸어주었다.
     인자에는 추가 기능을 구현한 StompHandler를 빈으로 등록하여 넣어주었다.
  */
-@RequiredArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     private final StompHandler stompHandler;
@@ -33,8 +33,8 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*")
-                .withSockJS(); // sock.js를 통하여 낮은 버전의 브라우저에서도 websocket이 동작할수 있게 합니다.
+        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*")
+                .withSockJS(); // sock.js를 통하여 낮은 버전의 브라우저에서도 websocket이 동작할 수 있게 합니다.
     }
 
     @Override

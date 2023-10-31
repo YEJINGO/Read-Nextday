@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChatRoom implements Serializable {
+public class ChatRoomDto implements Serializable {
 
     private static final long serialVersionUID = 6494678977089006639L;
 
@@ -19,8 +19,8 @@ public class ChatRoom implements Serializable {
     private String name;
 
     @Builder
-    public static ChatRoom create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
+    public static ChatRoomDto create(String name) {
+        ChatRoomDto chatRoom = new ChatRoomDto();
         chatRoom.chatRoomId = UUID.randomUUID().toString();
         chatRoom.name = name;
         return chatRoom;
