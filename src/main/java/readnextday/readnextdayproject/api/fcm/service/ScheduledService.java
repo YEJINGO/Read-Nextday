@@ -26,7 +26,7 @@ public class ScheduledService {
     private final FcmAlarmService fcmAlarmService;
     private final MemberRepository memberRepository;
     private final FcmTokenRepository fcmTokenRepository;
-    @Scheduled(cron = "0/10 * * * *")
+    @Scheduled(cron = "0/10 * * * * *")
     public void scheduledSend() throws ExecutionException, InterruptedException {
 
         Member member = memberRepository.findById(1L).orElseThrow(() -> new GlobalException(USER_NOT_FOUND));
