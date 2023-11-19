@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,14 @@ import readnextday.readnextdayproject.config.auth.LoginMember;
 import readnextday.readnextdayproject.entity.Member;
 import readnextday.readnextdayproject.entity.Role;
 import readnextday.readnextdayproject.exception.CustomEntryPoint;
+import readnextday.readnextdayproject.exception.chatException.UnauthorizedException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.Key;
 import java.util.Date;
 
@@ -93,21 +97,46 @@ public class JwtUtils {
         return false;
     }
 
-    public boolean stompValidationJwt(String token) throws IOException {
+    public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token); //토큰에 대한 검증 로직
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            throw UnauthorizedException.of(e.getClass().getName(), "잘못된 JWT 토큰입니다.");
         } catch (ExpiredJwtException e) {
-            log.error("토큰 만료 {}", e.getMessage());
-        } catch (MalformedJwtException e) {
-            log.error("토큰 유효성 검사 실패 {}", e.getMessage());
+            throw UnauthorizedException.of(e.getClass().getName(), "만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-            log.error("지원하지 않는 토큰 {}", e.getMessage());
-        } catch (SignatureException e) {
-            log.error("토큰 변조 {}", e.getMessage());
+            throw UnauthorizedException.of(e.getClass().getName(), "지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            throw UnauthorizedException.of(e.getClass().getName(), "JWT 토큰이 잘못되었습니다.");
+        }
+    }
+
+    public String getTokenStompHeader(String token) {
+        try {
+            return getAccessToken(URLDecoder.decode(token, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+
+    public String getEmail(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("email", String.class);
+    }
+    public Long getId(String token) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return claims.get("id", Long.class);
+    }
+
+    public String getAccessToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(
+                TOKEN_PREFIX)) {
+            return authorizationHeader.substring(7);
         }
 
-        return false;
+        return null;
     }
 
 

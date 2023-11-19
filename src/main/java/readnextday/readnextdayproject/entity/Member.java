@@ -26,18 +26,24 @@ public class Member {
 
     private String slackId;
 
+    private String nickname;
+
+    private String imageUrl;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-//    @OneToMany(mappedBy = "member", orphanRemoval = true)
-//    private List<Post> post = new ArrayList<>();
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<Post> post = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String email, String password, String slackId, Role role) {
+    public Member(Long id, String email, String password, String slackId, String nickname, String imageUrl, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.slackId = slackId;
+        this.nickname = nickname;
+        this.imageUrl = imageUrl;
         this.role = role;
     }
 }

@@ -3,7 +3,6 @@ package readnextday.readnextdayproject.api.chat.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import readnextday.readnextdayproject.api.chat.entity.ChatRoom;
 import readnextday.readnextdayproject.entity.Member;
 
 import javax.persistence.*;
@@ -17,7 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class UsersChattingRoom {
 
     @EmbeddedId
-    private UsersChattingRoomPk id;
+    private UsersChattingRoomPk usersChattingRoomPk;
 
     @MapsId("memberId")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,10 +27,6 @@ public class UsersChattingRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHATROOM_ID")
     private ChatRoom chatRoom;
-
-    public UsersChattingRoom(UsersChattingRoomPk id) {
-        this.id = id;
-    }
 
     @Embeddable
     @NoArgsConstructor(access = PROTECTED)
@@ -45,5 +40,11 @@ public class UsersChattingRoom {
             this.memberId = memberId;
             this.roomId = roomId;
         }
+    }
+
+    public UsersChattingRoom(Member member, ChatRoom chatRoom) {
+        this.usersChattingRoomPk = new UsersChattingRoomPk(member.getId(), chatRoom.getId());
+        this.member = member;
+        this.chatRoom = chatRoom;
     }
 }

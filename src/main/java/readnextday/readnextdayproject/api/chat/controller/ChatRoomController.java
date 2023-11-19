@@ -2,11 +2,14 @@ package readnextday.readnextdayproject.api.chat.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import readnextday.readnextdayproject.api.chat.dto.UserInfoDto;
-import readnextday.readnextdayproject.api.chat.entity.ChatMessage;
-import readnextday.readnextdayproject.api.chat.entity.ChatRoom;
-import readnextday.readnextdayproject.api.chat.service.ChatService;
+import readnextday.readnextdayproject.api.chat.dto.request.CreateChatRoomRequest;
+import readnextday.readnextdayproject.api.chat.dto.response.ChatMessageResponse;
+import readnextday.readnextdayproject.api.chat.dto.response.ChatRoomResponse;
+import readnextday.readnextdayproject.api.chat.dto.response.SelectedChatRoomResponse;
+import readnextday.readnextdayproject.api.chat.service.ChatRoomService;
+import readnextday.readnextdayproject.config.auth.LoginMember;
 
 import java.util.List;
 
@@ -17,36 +20,32 @@ import java.util.List;
 public class ChatRoomController {
 
 
-    private final ChatService chatService;
+    private final ChatRoomService chatService;
 
+    /**
+     * 채팅방 생성
+     */
+    @PostMapping("/rooms")
+    public ChatRoomResponse createRoom(@RequestBody CreateChatRoomRequest chatMessageRequest,
+                                       @AuthenticationPrincipal LoginMember loginMember) {
+        return chatService.createChatRoom(chatMessageRequest, loginMember);
+    }
+
+
+    /**
+     * 사용자 관련 모든 채팅방 조회
+     */
     @GetMapping("/rooms")
-    public List<ChatRoom> rooms() {
-        return chatService.findAllRoom();
+    public List<ChatMessageResponse> findAllRoomByUser(@AuthenticationPrincipal LoginMember loginMember) {
+        return chatService.findAllRoomByUser(loginMember);
     }
 
-    @PostMapping("/room")
-    public ChatRoom createRoom(@RequestBody UserInfoDto userInfoDto) {
-        return chatService.createChatRoom(userInfoDto);
+    /**
+     * 사용자 관련 선택된 채팅방 조회
+     */
+    @GetMapping("/rooms/{roomId}")
+    public SelectedChatRoomResponse findRoom(@PathVariable String roomId,
+                                             @AuthenticationPrincipal LoginMember loginMember) {
+        return chatService.findRoom(roomId, loginMember);
     }
-
-    @GetMapping("/room/{roomId}")
-    public List<ChatMessage> roomChatMessage(@PathVariable String roomId) {
-        return chatService.getListResult(roomId);
-    }
-
-//    @GetMapping("/user_room")
-//    public ListResult<ChatRoom> getRoomsByCustomer(@RequestHeader("X-AUTH-TOKEN") String xAuthToken) {
-//        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
-//        UserIdDto me = circuitBreaker.run(() -> userServiceClient.getUserId(xAuthToken),
-//                throwable -> null);
-//        if (me == null) {
-//            return responseService.getListResult(new ArrayList<>());
-//        }
-//        return responseService.getListResult(chatService.getUserEnterRooms(me));
-//    }
-//
-//    @GetMapping("/room/{roomId}/roomInfo")
-//    public SingleResult<ChatRoom> roomInfo(@PathVariable String roomId) {
-//        return responseService.getSingleResult(chatService.findRoomById(roomId));
-//    }
 }

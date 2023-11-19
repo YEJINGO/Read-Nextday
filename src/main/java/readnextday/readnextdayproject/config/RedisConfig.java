@@ -31,7 +31,7 @@ public class RedisConfig {
     }
 
 //    @Bean
-//    public StringRedisTemplate stringRedisTemplate() {
+//    public StringRedisTemplate stringRedisTemplate()  {
 //        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
 //        stringRedisTemplate.setConnectionFactory(redisAuthConnectionFactory());
 //        return stringRedisTemplate;

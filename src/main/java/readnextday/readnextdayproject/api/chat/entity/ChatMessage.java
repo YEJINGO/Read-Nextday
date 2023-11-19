@@ -1,39 +1,54 @@
 package readnextday.readnextdayproject.api.chat.entity;
 
-import lombok.*;
-import readnextday.readnextdayproject.entity.BaseEntity;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import readnextday.readnextdayproject.entity.Member;
-import readnextday.readnextdayproject.api.chat.dto.MessageType;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Setter
-@Builder
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class ChatMessage extends BaseEntity {
+public class ChatMessage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
-    private MessageType messageType; // 메시지 타입
-    private String sender; // 메시지 보낸사람
-    private String message; // 메시지
-    private String roomId;
+    private String redisRoomId;
+    private String message;
+    private int readCount;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime messageCreatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "email")
+    private Member member;
 
-    public static ChatMessage createChatMessage(String roomId, String sender, String message,MessageType type) {
-        return ChatMessage.builder()
-                .roomId(roomId)
-                .sender(sender)
-                .message(message)
-                .messageType(type)
-                .build();
+    @ManyToOne
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
+
+    @Builder
+    public ChatMessage(ChatRoom chatRoom, String message, String redisRoomId, int readCount, Member member) {
+        super();
+        this.member = member;
+        this.chatRoom = chatRoom;
+        this.redisRoomId = redisRoomId;
+        this.message = message;
+        this.readCount = readCount;
+        this.messageCreatedAt = LocalDateTime.now();
     }
 }
