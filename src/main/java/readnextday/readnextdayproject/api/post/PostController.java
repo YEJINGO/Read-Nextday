@@ -25,7 +25,8 @@ public class PostController {
 
     // 1. 게시글 등록
     @PostMapping
-    public Response<CreatePostResponse> createPost(@AuthenticationPrincipal LoginMember loginMember, @RequestBody CreatePostRequest request) {
+    public Response<CreatePostResponse> createPost(@AuthenticationPrincipal LoginMember loginMember,
+                                                   @RequestBody CreatePostRequest request) {
         return postService.createPost(loginMember, request);
     }
 

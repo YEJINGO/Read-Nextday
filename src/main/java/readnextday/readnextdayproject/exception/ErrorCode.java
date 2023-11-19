@@ -14,6 +14,7 @@ public enum ErrorCode {
     POST_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 게시물입니다."),
     ALARM_CONTENT_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 알람 글귀입니다." ),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자 입니다"),
+    FCM_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND,"토큰이 존재하지 않습니다")
     ;
 
     private HttpStatus status;
