@@ -8,4 +8,8 @@ import java.util.Optional;
 
 public interface FcmTokenRepository extends JpaRepository<FcmToken, Long> {
     Optional<FcmToken> findByMember(Member member);
+
+    boolean existsByMemberAndToken(Member member, String token);
+
+    Optional<FcmToken> findByMemberAndToken(Member member, String token);
 }

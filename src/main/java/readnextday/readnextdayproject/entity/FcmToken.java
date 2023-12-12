@@ -29,4 +29,8 @@ public class FcmToken {
         this.member = member;
         this.token = token;
     }
+
+    public void updateFcmToken(String token) {
+        this.token = token;
+    }
 }
