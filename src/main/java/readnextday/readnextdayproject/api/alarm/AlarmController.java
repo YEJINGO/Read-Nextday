@@ -18,7 +18,9 @@ public class AlarmController {
     private final AlarmService alarmService;
 
     @PostMapping("/{postId}")
-    public Response<AlarmResponse> settingAlarm(@AuthenticationPrincipal LoginMember loginMember, @PathVariable Long postId, @RequestBody AlarmRequest request) {
+    public Response<AlarmResponse> settingAlarm(@AuthenticationPrincipal LoginMember loginMember,
+                                                @PathVariable Long postId,
+                                                @RequestBody AlarmRequest request) {
         return alarmService.settingAlarm(loginMember, postId, request);
     }
 
