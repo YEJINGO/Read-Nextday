@@ -30,8 +30,8 @@ public class MemberController {
         return memberService.login(request);
     }
 
-    @PostMapping("/reissue")
-    public Response<LoginMemberResponse> reissue(@RequestBody RefreshTokenRequest request) {
-        return memberService.reissue(request);
-    }
+//    @PostMapping("/reissue")
+//    public Response<LoginMemberResponse> reissue(@RequestBody RefreshTokenRequest request) {
+//        return memberService.reissue(request);
+//    }
 }

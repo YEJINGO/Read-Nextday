@@ -16,7 +16,7 @@ public class ExceptionController {
 
     @ExceptionHandler(value = GlobalException.class)
     public ResponseEntity<Response<Void>> handleGlobalExceptionHandler(GlobalException e) {
-        log.error("error occur: {}" , e.getStackTrace());
+//        log.error("error occur: {}" , e.getStackTrace());
         log.error("error occur: {}" , e.toString());
 
         slackAlarm.sendErrorSlackMessage(e);

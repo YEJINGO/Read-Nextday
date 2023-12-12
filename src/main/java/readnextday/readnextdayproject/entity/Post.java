@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE POST_ID = ?")
+@Where(clause = "is_deleted = false")
 public class Post extends BaseEntity {
 
     @Id
