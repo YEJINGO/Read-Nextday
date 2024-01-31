@@ -52,5 +52,8 @@ Read-Nextday
   - 슬랙 게시글 알람(유저용) : 게시글에 대한 알림을 설정하여 슬랙에서 알림을 표시해준다.
   - 슬랙 알람(개발자용) : 게시글 생성 및 에러에 대한 내용을 슬랙으로 알려준다.
  
+### 주 구현 기능 설명
+https://dandy-gasoline-075.notion.site/03afa50bf78d4fd9ac11dea04c23d695?pvs=4
+ 
 ### ERD
 <img width="1252" alt="image" src="https://github.com/YEJINGO/Read-Nextday/assets/114003526/689e8b99-49ec-4739-aa46-8eba00e7f222">
