@@ -26,7 +26,6 @@ Read-Nextday
 2023-10-07~
 
 ### :couple: 팀 구성
-- Frontend : 양동훈
 - Backend : 고예진
 
 ### 서비스 설명
