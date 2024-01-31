@@ -1,9 +1,6 @@
 package readnextday.readnextdayproject.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -45,5 +43,9 @@ public class Member {
         this.nickname = nickname;
         this.imageUrl = imageUrl;
         this.role = role;
+    }
+
+    public void passwordUpdate(String password) {
+        this.password = password;
     }
 }

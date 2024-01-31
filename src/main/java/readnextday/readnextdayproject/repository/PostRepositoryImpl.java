@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static readnextday.readnextdayproject.entity.QMember.member;
 import static readnextday.readnextdayproject.entity.QPost.post;
 import static readnextday.readnextdayproject.entity.QPostTag.postTag;
 import static readnextday.readnextdayproject.entity.QTag.tag;
+
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
@@ -59,8 +59,5 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         Long count = queryFactory.select(post.count()).from(post).fetchOne();
         return new PageImpl<AllPostsResponse>(findAllPosts, pageable, count);
-
     }
-
-
 }

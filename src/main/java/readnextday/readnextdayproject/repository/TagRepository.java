@@ -6,7 +6,6 @@ import readnextday.readnextdayproject.entity.Tag;
 
 import java.util.List;
 import java.util.Optional;
-@Repository
 public interface TagRepository extends JpaRepository<Tag,Long> {
     Optional<Tag> findByName(String tag);
 }
