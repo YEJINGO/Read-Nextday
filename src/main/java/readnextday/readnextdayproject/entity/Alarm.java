@@ -43,6 +43,5 @@ public class Alarm {
         this.post = post;
         this.alarmContent = alarmContent;
     }
-
 }
 

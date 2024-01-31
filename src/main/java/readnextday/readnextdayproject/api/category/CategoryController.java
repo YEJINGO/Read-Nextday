@@ -19,8 +19,9 @@ public class CategoryController {
 
     // 1. 카테고리 생성
     @PostMapping
-    public Response<Void> createCategory(@AuthenticationPrincipal LoginMember loginMember,@RequestBody CreateCategoryRequest request) {
-        return categoryService.createCategory(loginMember,request);
+    public Response<Void> createCategory(@AuthenticationPrincipal LoginMember loginMember,
+                                         @RequestBody CreateCategoryRequest request) {
+        return categoryService.createCategory(loginMember, request);
     }
 
     // 2. 카테고리 이름 수정
@@ -33,7 +34,8 @@ public class CategoryController {
 
     // 3. 카테고리 삭제
     @DeleteMapping("/{categoryId}")
-    public Response<Void> deleteCategory(@AuthenticationPrincipal LoginMember loginMember,@PathVariable Long categoryId) {
-        return categoryService.deleteCategory(loginMember,categoryId);
+    public Response<Void> deleteCategory(@AuthenticationPrincipal LoginMember loginMember,
+                                         @PathVariable Long categoryId) {
+        return categoryService.deleteCategory(loginMember, categoryId);
     }
 }

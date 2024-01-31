@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,6 @@ public class Post extends BaseEntity {
     private Long id;
 
     private String url;
-
 
     private String title;
 
@@ -65,8 +65,17 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
-    public void update(String url, String title, String content) {
+    @Builder(builderClassName = "noUrlAndPdf", builderMethodName = "noUrlAndPdf")
+    public Post(String title, String content, Member member) {
+        this.title = title;
+        this.content = content;
+        this.member = member;
+    }
+
+    public void update(String url, String extractTextFromPdf, Category category, String title, String content) {
         this.url = url;
+        this.extractTextFromPdf = extractTextFromPdf;
+        this.category = category;
         this.title = title;
         this.content = content;
     }

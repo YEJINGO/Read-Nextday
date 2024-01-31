@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.awt.print.Book;
 
 @Entity
 @Getter
@@ -18,8 +17,6 @@ public class Bookmark {
     @Column(name = "BOOKMARK_ID")
     private Long id;
 
-    private boolean status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -29,13 +26,10 @@ public class Bookmark {
     private Post post;
 
     @Builder
-    public Bookmark(boolean status, Member member, Post post) {
-        this.status = status;
+    public Bookmark(Member member, Post post) {
         this.member = member;
         this.post = post;
     }
 
-    public void update() {
-        this.status = false;
-    }
+
 }

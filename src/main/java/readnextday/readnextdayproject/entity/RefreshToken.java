@@ -19,17 +19,16 @@ public class RefreshToken {
     @Id
     private Long id;
 
-    private LoginMember loginMember;
+    private Long loginMemberId;
 
     @TimeToLive
     private Long expiration = REFRESH_TOKEN_EXPIRE_TIME_FOR_REDIS;
 
-    @Indexed
     private String refreshToken;
 
     @Builder
-    public RefreshToken(LoginMember loginMember, String refreshToken) {
-        this.loginMember = loginMember;
+    public RefreshToken(Long loginMemberId, String refreshToken) {
+        this.loginMemberId = loginMemberId;
         this.refreshToken = refreshToken;
     }
 }

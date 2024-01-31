@@ -44,12 +44,12 @@ public class JwtUtils {
     }
 
     // loginMember 정보를 가지고 AccessToken 생성
-    public String generateAccessToken(LoginMember loginMember) {
+    public String generateAccessToken(Member member) {
         return Jwts.builder()
-                .claim("id", loginMember.getMember().getId())
-                .claim("email", loginMember.getMember().getEmail())
-                .claim("slackId", loginMember.getMember().getSlackId())
-                .claim("role", loginMember.getMember().getRole())
+                .claim("id", member.getId())
+                .claim("email", member.getEmail())
+                .claim("slackId", member.getSlackId())
+                .claim("role", member.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)

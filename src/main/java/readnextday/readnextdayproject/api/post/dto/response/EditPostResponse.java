@@ -10,18 +10,18 @@ import java.util.List;
 @NoArgsConstructor
 public class EditPostResponse {
     private String url;
+    private String extractTextFromPdf;
     private String title;
     private String content;
-    private Long parentId;
     private List<String> tagName;
 
 
     @Builder
-    public EditPostResponse(String url, String title, String content,Long parentId,List<String> tagName) {
+    public EditPostResponse(String url, String extractTextFromPdf, String title, String content, List<String> tagName) {
         this.url = url;
+        this.extractTextFromPdf = extractTextFromPdf;
         this.title = title;
         this.content = content;
-        this.parentId = parentId;
         this.tagName = tagName;
     }
 }
